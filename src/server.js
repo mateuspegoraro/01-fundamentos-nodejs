@@ -18,9 +18,6 @@ const users = []
 const server = http.createServer((req, res) => {
     const {method, url} = req
 
-
-    console.log(req.headers)
-    
     if(method === 'GET' && url === '/users'){
         return res
             .setHeader('Content-type', 'application/json')
@@ -33,10 +30,12 @@ const server = http.createServer((req, res) => {
             name: 'john doe',
             email: 'johndoe@example.com'
         })
-        return res.end('Criação de usuário')
+        return res
+            .writeHead(201)
+            .end('Criação de usuário')
     }
 
-    return res.end("hello ignite")
+    return res.writeHead(404).end()
 })
 
 server.listen(3333)
