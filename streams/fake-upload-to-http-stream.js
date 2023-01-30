@@ -7,14 +7,14 @@ class OneToHundredStream extends Readable { // Só consegue ler dados
         const i = this.index++
 
         setTimeout(() => {
-            if (i > 100) {
+            if (i > 5) {
                 this.push(null)
             } else {
                 const buf = Buffer.from(String(i))
 
                 this.push(buf)
             }
-        }, 500)
+        }, 1000)
     }
 }
 // fetch é nativo desde a versão 18 do node
@@ -22,4 +22,8 @@ fetch('http://localhost:3334', {
     method: 'POST',
     body: new OneToHundredStream(),
     duplex: 'half'
+}).then(response => {
+    response.text().then(data => {
+        console.log(data)
+    })
 })
