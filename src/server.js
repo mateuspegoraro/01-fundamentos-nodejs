@@ -1,4 +1,5 @@
 import http from 'node:http' // utilizando o prefixo "node:" como boa prática
+import { json } from './middlewares/json.js'
 
 //  Principais recursos de uma chamada HTTP
 //   - HTTP
@@ -18,19 +19,10 @@ const users = []
 const server = http.createServer(async (req, res) => {
     const {method, url} = req
 
-    const buffers = []
-    for await (const chunk of req) {
-        buffers.push(chunk)
-    }
-    try {
-        req.body = JSON.parse(Buffer.concat(buffers).toString())
-    } catch {
-        req.body = null
-    }
+    await json(req, res)
 
     if(method === 'GET' && url === '/users'){
         return res
-            .setHeader('Content-type', 'application/json')
             .end(JSON.stringify(users))
     }
 
@@ -43,7 +35,7 @@ const server = http.createServer(async (req, res) => {
         })
         return res
             .writeHead(201)
-            .end('Criação de usuário')
+            .end()
     }
 
     return res.writeHead(404).end()
