@@ -11,6 +11,7 @@
 
 // Cabeçalhos da Request e da Response são Metadados (informações adicionais de como o dado pode ser interpretado pelo cliente)
 
+import { randomUUID } from 'node:crypto'
 import http from 'node:http' // utilizando o prefixo "node:" como boa prática
 import { Database } from './database.js'
 import { json } from './middlewares/json.js'
@@ -31,7 +32,7 @@ const server = http.createServer(async (req, res) => {
     if(method === 'POST' && url === '/users'){
         const {name, email} = req.body
         const user = {
-            id: 1,
+            id: randomUUID(),
             name: name,
             email: email
         }
