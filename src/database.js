@@ -17,9 +17,17 @@ export class Database {
     #persist() {
         fs.writeFile(databasePath, JSON.stringify(this.#database))
     }
-    select(table) {
-        const data = this.#database[table] ?? []
-
+    // {'nome': 'mateus', 'email': 'mateus@email'}
+    // Object.entries => [['nome', 'mateus'], ['email', 'mateus@email']]
+    select(table, search) {
+        let data = this.#database[table] ?? []
+        if (search) {
+            data = data.filter(row => {
+                return Object.entries(search).some(([key, value]) => {
+                    return row[key].includes(value) 
+                })
+            })
+        }
         return data
     }
     insert(table, data) {
@@ -36,7 +44,7 @@ export class Database {
             .findIndex(row => {
                 return row.id === id
             })
-        if(rowIndex > -1) {
+        if (rowIndex > -1) {
             this.#database[table][rowIndex] = { id, ...data }
             this.#persist()
         }
@@ -46,7 +54,7 @@ export class Database {
             .findIndex(row => {
                 return row.id === id
             })
-        if(rowIndex > -1) {
+        if (rowIndex > -1) {
             this.#database[table].splice(rowIndex, 1)
             this.#persist()
         }
